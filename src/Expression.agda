@@ -36,3 +36,20 @@ freeVariables (expr · expr₁) =
     (freeVariables expr) ++ (freeVariables expr₁)
 freeVariables (Let expr (x , y) expr₁) =
     (freeVariables expr) ++ boolFilter (not ∘ λ x₁ → (x₁ == x) ∧ (x₁ == y)) (freeVariables expr₁)
+
+_[_:=_] : Expr → Name → Expr → Expr
+(var x₁) [ x := N ] =
+    case (x == x₁) of
+         λ { true → N
+           ; false → var x₁
+           }
+(λ₁ x₁ expr) [ x := N ] = {!!}
+(λ₂ x₁ expr) [ x := N ] = {!!}
+(expr $ₗ expr₁) [ x := N ] =
+    (expr [ x := N ]) $ₗ (expr₁ [ x := N ])
+(expr $ᵣ expr₁) [ x := N ] =
+    (expr [ x := N ]) $ᵣ (expr₁ [ x := N ])
+(expr · expr₁) [ x := N ] =
+    (expr [ x := N ]) · (expr₁ [ x := N ])
+(Let expr x₁ expr₁) [ x := N ] =
+    {!!}
