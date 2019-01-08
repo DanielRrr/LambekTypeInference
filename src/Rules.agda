@@ -19,6 +19,8 @@ data TypeEnv : Set where
 empty : TypeEnv
 empty = typeEnv []
 
+
+infixl 7 _+++_
 _+++_ : TypeEnv → TypeEnv → TypeEnv
 typeEnv x +++ typeEnv x₁ = typeEnv (x ++ x₁)
 
@@ -30,3 +32,7 @@ data _⊢_ : {M : Expr} {A : Type} → (Γ : TypeEnv) → M :: A → Set where
          → (Π +++ typeEnv [ x , A ]) ⊢ typeRel M B → Π ⊢ typeRel (λ₂ x M) (B ⇐ A)
     ⊗-intro : {Γ Δ : TypeEnv} {A B : Type} {M N : Expr}
          → Γ ⊢ typeRel M A → Δ ⊢ typeRel N B → (Γ +++ Δ) ⊢ typeRel (M · N) (A ⊗ B)
+    ⊗-elim : {Γ Δ Π : TypeEnv} {A B C : Type} {M N : Expr} {x y : Name}
+         → Γ ⊢ typeRel M (A ⊗ B) → (Δ +++ typeEnv [ x , A ] +++ typeEnv [ y , B ] +++ Π) ⊢ typeRel N C
+         → (Δ +++ Γ +++ Π) ⊢ typeRel (Let M (x , y) N) C
+         
